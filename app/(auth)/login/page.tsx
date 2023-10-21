@@ -43,7 +43,7 @@ export default function Login(){
                       <input type="password"  placeholder="password" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                       {...register("password",{required: "Password is required.", })}
                      />
-                      <label className="bg-gray-300 hover:bg-gray-400 rounded px-2 py-1 text-sm text-gray-600 font-mono cursor-pointer js-password-label" >show</label>
+ 
                       </div>
                       <p className='text-red-500'>
                         <ErrorMessage errors={errors} name="password" />
