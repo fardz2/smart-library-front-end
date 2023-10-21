@@ -17,7 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import { useRouter } from 'next/navigation'
 import Button from '@mui/material/Button';
-
+import Link from 'next/link';
 
 
 const drawerWidth = 240;
@@ -44,30 +44,24 @@ export default function SideNav(props: Props) {
       <Toolbar />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        <Link href={'/'}>
+          <ListItem  disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={'Home'} />
             </ListItemButton>
           </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
+        </Link>
+        <Link href={'/search'}>
+          <ListItem  disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={'Search'} />
             </ListItemButton>
           </ListItem>
-        ))}
+        </Link>
+      
       </List>
+      
+      
     </div>
   );
 
@@ -81,7 +75,7 @@ export default function SideNav(props: Props) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          bgcolor: "transparent",
+          
           boxShadow:'none'
         }}
         
