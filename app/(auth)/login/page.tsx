@@ -15,8 +15,17 @@ type Inputs = {
 };
 const schema = yup
   .object({
-    email: yup.string().email().required(),
-    password: yup.string().password().required(),
+    email: yup
+      .string()
+      .email("Email must be a valid email")
+      .required("Email is a required field"),
+    password: yup
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .minUppercase(1, "Password must contain at least 1 uppercase letter")
+      .minNumbers(1, "Password must contain at least 1 number")
+      .minSymbols(1, "Password must contain at least 1 symbol")
+      .required("Password is a required field"),
   })
   .required();
 export default function Login() {
@@ -82,7 +91,7 @@ export default function Login() {
                   className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
                     errors.email ? "border-rose-600" : ""
                   }`}
-                  placeholder="name@company.com"
+                  placeholder="Email"
                   {...register("email")}
                 />
 

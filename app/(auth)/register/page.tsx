@@ -7,7 +7,7 @@ import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
-import errorsToRecord from "@hookform/resolvers/io-ts/dist/errorsToRecord.js";
+
 YupPassword(yup);
 type Inputs = {
   name: string;
