@@ -15,6 +15,10 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
+img{
+  width: 200px;
+  height: 250px;
+}
 
 body {
   color: rgb(var(--foreground-rgb));
