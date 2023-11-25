@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "react-toastify";
+
 interface buku {
   cover: string;
   judul: string;

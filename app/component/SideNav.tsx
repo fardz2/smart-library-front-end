@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import useAuthStore from "../stores/authStore";
-import { toast } from "react-toastify";
+
 const drawerWidth = 240;
 
 interface Props {
@@ -33,9 +33,10 @@ export default function SideNav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [role, setRole] = useState<string | null>(null);
-  const { token, clearToken } = useAuthStore();
+  const { token, setToken, clearToken } = useAuthStore();
   useEffect(() => {
-    if (token) {
+    if (localStorage.getItem("token")) {
+      setToken(localStorage.getItem("token"));
       getInfoUser();
     }
   }, []);

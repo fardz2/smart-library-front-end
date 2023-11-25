@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Roboto } from "next/font/google";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Roboto } from "next/font/google";
+import Toastify from "./component/Toasify";
+
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin"],
@@ -19,19 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={roboto.className}>
-      <body className="bg-[#F3F3F7]">{children}</body>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      <body className="bg-[#F3F3F7]">
+        {children}
+        <Toastify />
+      </body>
     </html>
   );
 }

@@ -1,7 +1,7 @@
 import "../globals.css";
 import "./index.css";
 
-import { Inter, Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,8 +15,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex justify-center items-center bg-login-regis sans">
+    <section className="flex justify-center items-center bg-login-regis sans">
       {children}
-    </div>
+    </section>
   );
 }
