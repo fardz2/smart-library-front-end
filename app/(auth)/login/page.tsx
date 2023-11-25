@@ -8,6 +8,8 @@ import useAuthStore from "@/app/stores/authStore";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
+import { toast } from "react-toastify";
+
 YupPassword(yup);
 type Inputs = {
   email: string;
@@ -30,7 +32,7 @@ const schema = yup
   .required();
 export default function Login() {
   const router = useRouter();
-  const { setToken, token } = useAuthStore();
+  const { setToken } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -39,9 +41,6 @@ export default function Login() {
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    console.log(token);
-  }, [token]);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       const headers = {
@@ -58,7 +57,16 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       setToken(localStorage.getItem("token"));
       router.replace("/");
-      alert("berhasil login");
+      toast.success("Login success", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } catch (error: any) {
       if (error.response.data.status == 404) {
         return alert(error.response.data.message);

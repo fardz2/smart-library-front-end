@@ -7,6 +7,7 @@ import axios from "axios";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
+import { toast } from "react-toastify";
 
 YupPassword(yup);
 type Inputs = {
@@ -54,7 +55,16 @@ export default function Register() {
         }
       );
       router.replace("/login");
-      alert("berhasil registrasi, silahkan login");
+      toast.success("Register success, Please Login", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } catch (error: any) {
       if (error.response.data.status == 404) {
         return alert(error.response.data.message);

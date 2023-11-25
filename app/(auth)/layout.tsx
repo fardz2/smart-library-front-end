@@ -15,10 +15,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.className}>
-      <body className="flex justify-center items-center bg-login-regis sans">
-        {children}
-      </body>
-    </html>
+    <div className="flex justify-center items-center bg-login-regis sans">
+      {children}
+    </div>
   );
 }

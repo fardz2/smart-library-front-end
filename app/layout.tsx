@@ -1,7 +1,6 @@
-import "../globals.css";
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Roboto } from "next/font/google";
-import SideNav from "../component/SideNav";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const roboto = Roboto({
@@ -19,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <SideNav>{children}</SideNav>
+    <html lang="en" className={roboto.className}>
+      <body className="bg-[#F3F3F7]">{children}</body>
       <ToastContainer
         position="bottom-right"
         autoClose={5000}
@@ -33,6 +32,6 @@ export default function RootLayout({
         pauseOnHover
         theme="light"
       />
-    </>
+    </html>
   );
 }

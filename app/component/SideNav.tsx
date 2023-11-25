@@ -7,22 +7,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { useRouter } from "next/navigation";
 import Button from "@mui/material/Button";
 import Link from "next/link";
-import Alert from "@mui/material/Alert";
 import useAuthStore from "../stores/authStore";
-import { Console } from "console";
-
+import { toast } from "react-toastify";
 const drawerWidth = 240;
 
 interface Props {
@@ -38,17 +33,13 @@ export default function SideNav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [role, setRole] = useState<string | null>(null);
-  const { token, setToken, clearToken } = useAuthStore();
+  const { token, clearToken } = useAuthStore();
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"));
+    if (token) {
       getInfoUser();
     }
-  }, [token]);
-  // useEffect(()=>{
-  //   console.log(token)
+  }, []);
 
-  // },[token])
   const getInfoUser = async () => {
     try {
       const headers = {
@@ -81,7 +72,16 @@ export default function SideNav(props: Props) {
         localStorage.removeItem("token");
         setRole(null);
         clearToken();
-        alert("berhasil logout");
+        toast.success("Logout success", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
     } catch (error) {
       console.error(error);
