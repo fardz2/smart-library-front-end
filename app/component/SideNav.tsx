@@ -11,14 +11,23 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import { useRouter } from "next/navigation";
-import Button from "@mui/material/Button";
 import Link from "next/link";
 import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
-
+import {
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Button,
+  Avatar,
+  Input,
+  Spinner,
+} from "@nextui-org/react";
+import { ChevronDownIcon, Menu, Search } from "lucide-react";
+// import useinfoUserStore from "../stores/userInfoStore";
 const drawerWidth = 240;
 
 interface Props {
@@ -33,26 +42,37 @@ interface Props {
 export default function SideNav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
-  const [role, setRole] = useState<string | null>(null);
-  const { token, setToken, clearToken } = useAuthStore();
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const { token, setToken, clearToken, setInfoUser, infoUser, resetInfoUser } =
+    useAuthStore();
+  // const { infoUser, setinfoUser, resetinfoUser } = useinfoUserStore();
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"));
-      getInfoUser();
-    }
-  }, []);
+    // if (localStorage.getItem("token")) {
+    //   setToken(localStorage.getItem("token"));
+    //   getinfoUser();
+    // }
+    getinfoUser();
+  }, [token]);
 
-  const getInfoUser = async () => {
+  const getinfoUser = async () => {
     try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      const response = await axios.get("http://127.0.0.1:8000/api/info", {
-        headers,
-      });
-      if (response.status == 200) {
-        setRole(response.data.data.role);
+      if (token != null) {
+        setLoading(true);
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+        const response = await axios.get("http://127.0.0.1:8000/api/info", {
+          headers,
+        });
+        if (response.status == 200) {
+          setInfoUser({
+            name: response.data.data.name,
+            email: response.data.data.email,
+            role: response.data.data.role_id,
+          });
+        }
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -72,7 +92,7 @@ export default function SideNav(props: Props) {
       });
       if (response.status == 200) {
         localStorage.removeItem("token");
-        setRole(null);
+        resetInfoUser();
         clearToken();
         toast.success("Logout success", {
           position: "bottom-right",
@@ -84,6 +104,7 @@ export default function SideNav(props: Props) {
           progress: undefined,
           theme: "light",
         });
+        router.replace("/");
       }
     } catch (error) {
       console.error(error);
@@ -109,11 +130,33 @@ export default function SideNav(props: Props) {
             </ListItemButton>
           </ListItem>
         </Link>
-        {role == "admin" ? (
+        {infoUser?.role == 1 ? (
           <Link href={"/user"}>
             <ListItem disablePadding>
               <ListItemButton>
                 <ListItemText primary={"User"} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ) : (
+          ""
+        )}
+        {infoUser?.role == 1 || infoUser?.role == 2 ? (
+          <Link href={"/manage-buku"}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText primary={"Manage buku"} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+        ) : (
+          ""
+        )}
+        {infoUser?.role == 3 ? (
+          <Link href={"/my-shelf"}>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemText primary={"my shelf"} />
               </ListItemButton>
             </ListItem>
           </Link>
@@ -127,19 +170,22 @@ export default function SideNav(props: Props) {
   const container =
     window !== undefined ? () => window().document.body : undefined;
   const router = useRouter();
-  return (
+
+  return isLoading ? (
+    <div className="flex justify-center items-center h-screen">
+      <Spinner />
+    </div>
+  ) : (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-
           boxShadow: "none",
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ bgcolor: "white" }}>
           <div className="flex justify-between w-full items-center">
             <IconButton
               color="inherit"
@@ -148,32 +194,57 @@ export default function SideNav(props: Props) {
               onClick={handleDrawerToggle}
               sx={{ mr: 2, display: { sm: "none" } }}
             >
-              <MenuIcon />
+              <Menu color="#000000" />
             </IconButton>
-            <div>
-              <input type="text" />
+            <div className="p-2">
+              <Input
+                type="text"
+                placeholder="Enter your search"
+                startContent={<Search color="#000000" />}
+                className="h-98"
+              />
             </div>
             <div>
               {token != null ? (
-                <Button
-                  variant="contained"
-                  className="rounded-full"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button radius="full" className="pl-1 py-6 bg-white">
+                      <Avatar
+                        isBordered
+                        color="default"
+                        src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                      />
+                      <p>{infoUser?.name}</p>
+                      <ChevronDownIcon />
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions">
+                    <DropdownItem
+                      key="new"
+                      onClick={() => router.push("/profile/")}
+                    >
+                      Profile
+                    </DropdownItem>
+                    <DropdownItem
+                      key="delete"
+                      className="text-danger"
+                      color="danger"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               ) : (
                 <div>
                   <Button
-                    variant="contained"
-                    className="rounded-full"
+                    className="rounded-full bg-[#3DA5B4] text-white"
                     onClick={() => router.push("/login")}
                   >
                     Login
                   </Button>
                   <Button
-                    variant="contained"
-                    className="rounded-full"
+                    className="rounded-full bg-[#B6B6B6] text-white"
                     onClick={() => router.push("/register")}
                   >
                     Register
@@ -227,7 +298,7 @@ export default function SideNav(props: Props) {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          width: `calc(100% - ${drawerWidth}px)`,
         }}
       >
         <Toolbar />

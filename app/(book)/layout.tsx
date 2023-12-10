@@ -2,6 +2,7 @@ import "../globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import SideNav from "../component/SideNav";
+import { Suspense } from "react";
 const roboto = Roboto({
   weight: "400",
   subsets: ["latin"],

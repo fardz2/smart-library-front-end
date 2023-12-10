@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,10 @@ import useAuthStore from "@/app/stores/authStore";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
+
 import { toast } from "react-toastify";
+import { Input, Button } from "@nextui-org/react";
+import { Eye, EyeOff } from "lucide-react";
 
 YupPassword(yup);
 type Inputs = {
@@ -40,9 +43,12 @@ export default function Login() {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
-
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
+      setIsLoadingLogin(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -54,8 +60,9 @@ export default function Login() {
       );
 
       // Handle respons dari API sesuai kebutuhan Anda
-      localStorage.setItem("token", response.data.token);
-      setToken(localStorage.getItem("token"));
+      // localStorage.setItem("token", response.data.token);
+      setToken(response.data.token);
+      setIsLoadingLogin(false);
       router.replace("/");
       toast.success("Login success", {
         position: "bottom-right",
@@ -69,8 +76,18 @@ export default function Login() {
       });
     } catch (error: any) {
       if (error.response.data.status == 404) {
-        return alert(error.response.data.message);
+        toast.success(error.response.data.message, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
+        setIsLoadingLogin(false);
         return alert(error.response.data.errors);
       }
     }
@@ -81,7 +98,7 @@ export default function Login() {
         <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 h-full">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <center>
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-10">
                 Welcome Back
               </h1>
             </center>
@@ -90,38 +107,45 @@ export default function Login() {
               className="space-y-4 md:space-y-6"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Email{" "}
-                </label>
-                <input
+              <div className="mb-2">
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
                   type="email"
-                  className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
-                    errors.email ? "border-rose-600" : ""
-                  }`}
-                  placeholder="Email"
+                  label="Email"
+                  placeholder="Enter your email"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.email ? true : false}
+                  errorMessage={errors.email?.message}
+                  className="mb-10 "
                   {...register("email")}
                 />
-
-                <p className="text-red-500">{errors.email?.message}</p>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Password
-                </label>
-
-                <div className="flex ">
-                  <input
-                    type="password"
-                    placeholder="password"
-                    className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
-                      errors.password ? "border-rose-600" : ""
-                    }`}
-                    {...register("password")}
-                  />
-                </div>
-
-                <p className="text-red-500">{errors.password?.message}</p>
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
+                  label="Password"
+                  placeholder="Enter your password"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.password ? true : false}
+                  errorMessage={errors.password?.message}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibility}
+                    >
+                      {isVisible ? (
+                        <EyeOff strokeWidth={0.75} />
+                      ) : (
+                        <Eye strokeWidth={0.75} />
+                      )}
+                    </button>
+                  }
+                  type={isVisible ? "text" : "password"}
+                  {...register("password")}
+                />
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
@@ -147,12 +171,13 @@ export default function Login() {
                 </a>
               </div>
               <div className=" !mt-3 space-y-3 md:!mt-10">
-                <button
+                <Button
                   type="submit"
                   className=" w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  isLoading={isLoadingLogin}
                 >
                   Login
-                </button>
+                </Button>
                 <Link href={"/"}>
                   <button className="mt-3 w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Back

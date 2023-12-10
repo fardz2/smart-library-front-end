@@ -1,7 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { NextUIProvider } from "@nextui-org/react";
 import { Roboto } from "next/font/google";
 import Toastify from "./component/Toasify";
+import { Providers } from "./providers";
 
 const roboto = Roboto({
   weight: "400",
@@ -19,9 +21,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={roboto.className}>
-      <body className="bg-[#F3F3F7]">
-        {children}
-        <Toastify />
+      <body className="bg-[#F3F3F7] md:h-screen h-full">
+        <Providers>
+          {children}
+          <Toastify />
+        </Providers>
       </body>
     </html>
   );

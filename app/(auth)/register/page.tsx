@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
 import { toast } from "react-toastify";
-
+import { Input, Button } from "@nextui-org/react";
+import { Eye, EyeOff } from "lucide-react";
 YupPassword(yup);
 type Inputs = {
   name: string;
@@ -41,8 +42,17 @@ export default function Register() {
   } = useForm<Inputs>({
     resolver: yupResolver(schema),
   });
+  const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
+  const [isVisibleConPassword, setIsVisibleConPassword] =
+    useState<boolean>(false);
+  const [isLoadingRegister, setIsLoadingRegister] = useState<boolean>(false);
+  const toggleVisibilityPassword = () =>
+    setIsVisiblePassword(!isVisiblePassword);
+  const toggleVisibilityConPassword = () =>
+    setIsVisibleConPassword(!isVisibleConPassword);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
+      setIsLoadingRegister(true);
       const headers = {
         "Content-Type": "application/json",
       };
@@ -54,7 +64,6 @@ export default function Register() {
           headers,
         }
       );
-      router.replace("/login");
       toast.success("Register success, Please Login", {
         position: "bottom-right",
         autoClose: 5000,
@@ -65,10 +74,13 @@ export default function Register() {
         progress: undefined,
         theme: "light",
       });
+      setIsLoadingRegister(false);
+      router.replace("/login");
     } catch (error: any) {
       if (error.response.data.status == 404) {
         return alert(error.response.data.message);
       } else {
+        setIsLoadingRegister(false);
         return alert(error.response.data.errors.email);
       }
     }
@@ -90,80 +102,95 @@ export default function Register() {
               onSubmit={handleSubmit(onSubmit)}
             >
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Name{" "}
-                </label>
-                <input
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
                   type="text"
-                  id="name"
-                  className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
-                    errors.name ? "border-rose-600" : ""
-                  }`}
-                  placeholder="Name"
+                  label="Name"
+                  placeholder="Enter your name"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.name ? true : false}
+                  errorMessage={errors.name?.message}
+                  className="mb-10 "
                   {...register("name")}
                 />
-                <p className="text-red-500">{errors.name?.message}</p>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Email{" "}
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                  ${errors.email ? "border-rose-600" : ""}
-                  `}
-                  placeholder="Email"
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
+                  type="text"
+                  label="Email"
+                  placeholder="Enter your email"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.email ? true : false}
+                  errorMessage={errors.email?.message}
+                  className="mb-10 "
                   {...register("email")}
                 />
-                <p className="text-red-500">{errors.email?.message}</p>
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Password
-                </label>
-
-                <div className="flex ">
-                  <input
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                  ${errors.password ? "border-rose-600" : ""}
-                  `}
-                    {...register("password")}
-                  />
-                </div>
-                <p className="text-red-500">{errors.password?.message}</p>
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
+                  label="Password"
+                  placeholder="Enter your password"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.password ? true : false}
+                  errorMessage={errors.password?.message}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibilityPassword}
+                    >
+                      {isVisiblePassword ? (
+                        <EyeOff strokeWidth={0.75} />
+                      ) : (
+                        <Eye strokeWidth={0.75} />
+                      )}
+                    </button>
+                  }
+                  type={isVisiblePassword ? "text" : "password"}
+                  className="mb-10"
+                  {...register("password")}
+                />
               </div>
               <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Confirm Password
-                </label>
-
-                <div className="flex ">
-                  <input
-                    type="password"
-                    id="password"
-                    placeholder="Confirm Password"
-                    className={`bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-md focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
-                  ${errors.confirmPassword ? "border-rose-600" : ""}
-                  `}
-                    {...register("confirmPassword")}
-                  />
-                </div>
-                <p className="text-red-500">
-                  {errors.confirmPassword?.message}
-                </p>
+                <Input
+                  key={"outside"}
+                  radius={"sm"}
+                  label="Confirm Password"
+                  placeholder="Enter your Confirm Password"
+                  labelPlacement={"outside"}
+                  isInvalid={errors.confirmPassword ? true : false}
+                  errorMessage={errors.confirmPassword?.message}
+                  endContent={
+                    <button
+                      className="focus:outline-none"
+                      type="button"
+                      onClick={toggleVisibilityConPassword}
+                    >
+                      {isVisibleConPassword ? (
+                        <EyeOff strokeWidth={0.75} />
+                      ) : (
+                        <Eye strokeWidth={0.75} />
+                      )}
+                    </button>
+                  }
+                  type={isVisibleConPassword ? "text" : "password"}
+                  className="mb-10"
+                  {...register("confirmPassword")}
+                />
               </div>
               <div className=" !mt-3 space-y-3 md:!mt-10">
-                <button
+                <Button
                   type="submit"
                   className=" w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                  isLoading={isLoadingRegister}
                 >
                   Register
-                </button>
+                </Button>
                 <Link href={"/"}>
                   <button className="mt-3 w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                     Back

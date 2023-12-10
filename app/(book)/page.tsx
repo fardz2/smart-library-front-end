@@ -1,7 +1,12 @@
 import axios from "axios";
 import Buku from "../component/cardBuku";
 export default async function Home() {
-  const res = await axios.get("http://127.0.0.1:8000/api/buku");
+  const headers = {
+    "Cache-Control": "no-cache",
+  };
+  const res = await axios.get("http://127.0.0.1:8000/api/buku/recommended", {
+    headers,
+  });
   const data = res.data.data;
 
   return (
@@ -10,6 +15,7 @@ export default async function Home() {
 
       <div>
         <h3>Recommended for you</h3>
+
         <div className="overflow-x-scroll flex flex-nowrap">
           {data.map((e: any) => (
             <Buku
