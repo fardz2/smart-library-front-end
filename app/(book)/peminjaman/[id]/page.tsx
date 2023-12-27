@@ -2,6 +2,7 @@
 import CardPeminjaman from "@/app/component/buku/CardPeminjaman";
 
 import axios from "axios";
+
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -39,6 +40,7 @@ export default function Page({ params }: { params: { id: number } }) {
       alert("tidak ditemukan");
     } else {
       const resData = data.data;
+      console.log(resData);
       setInfoPeminjaman({
         tanggal_peminjaman: resData.tanggal_peminjaman,
         tanggal_pengembalian: resData.tanggal_pengembalian,
@@ -50,19 +52,21 @@ export default function Page({ params }: { params: { id: number } }) {
   };
 
   return (
-    <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">
-      {infoPeminjaman.data.map((e: any) => (
-        <CardPeminjaman
-          cover={e.cover}
-          judul_buku={e.judul_buku}
-          penerbit={e.penerbit}
-          tahun_terbit={e.tahun_terbit}
-          tanggal_peminjaman={infoPeminjaman.tanggal_peminjaman}
-          tanggal_pengembalian={infoPeminjaman.tanggal_pengembalian}
-          id={e.pivot.id}
-          statusBuku={e.pivot.status}
-        />
-      ))}
-    </div>
+    <>
+      <div className="grid lg:grid-cols-4 grid-cols-1 gap-5">
+        {infoPeminjaman.data.map((e: any) => (
+          <CardPeminjaman
+            cover={e.cover}
+            judul_buku={e.judul_buku}
+            penerbit={e.penerbit}
+            tahun_terbit={e.tahun_terbit}
+            tanggal_peminjaman={infoPeminjaman.tanggal_peminjaman}
+            tanggal_pengembalian={infoPeminjaman.tanggal_pengembalian}
+            id={e.pivot.id}
+            statusBuku={e.pivot.status}
+          />
+        ))}
+      </div>
+    </>
   );
 }

@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import useAuthStore from "@/app/stores/authStore";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
@@ -12,6 +10,7 @@ import YupPassword from "yup-password";
 import { toast } from "react-toastify";
 import { Input, Button } from "@nextui-org/react";
 import { Eye, EyeOff } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 YupPassword(yup);
 type Inputs = {
@@ -35,7 +34,6 @@ const schema = yup
   .required();
 export default function Login() {
   const router = useRouter();
-  const { setToken } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -47,36 +45,16 @@ export default function Login() {
   const [isLoadingLogin, setIsLoadingLogin] = useState<boolean>(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    try {
-      setIsLoadingLogin(true);
-      const headers = {
-        "Content-Type": "application/json",
-      };
-      const jsonData = JSON.stringify(data);
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/login",
-        jsonData,
-        { headers }
-      );
-
-      // Handle respons dari API sesuai kebutuhan Anda
-      // localStorage.setItem("token", response.data.token);
-      setToken(response.data.token);
-      setIsLoadingLogin(false);
-      router.replace("/");
-      toast.success("Login success", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } catch (error: any) {
-      if (error.response.data.status == 404) {
-        toast.success(error.response.data.message, {
+    setIsLoadingLogin(true);
+    signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    }).then(({ ok, error }: any) => {
+      if (ok) {
+        setIsLoadingLogin(false);
+        router.replace("/");
+        toast.success("Login success", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -87,24 +65,25 @@ export default function Login() {
           theme: "light",
         });
       } else {
+        toast("Credentials do not match!", { type: "error" });
         setIsLoadingLogin(false);
-        return alert(error.response.data.errors);
       }
-    }
+    });
   };
   return (
     <section className=" w-full">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen ">
-        <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 h-full">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <center>
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-10">
-                Welcome Back
-              </h1>
+        <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 h-auto">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8 ">
+            <center className="mb-6">
+              <h3 className="text-lg font-bold leading-tight tracking-tight text-gray-900  dark:text-white">
+                Selamat Datang
+              </h3>
+              <h4>Sign in untuk melanjutkan </h4>
             </center>
 
             <form
-              className="space-y-4 md:space-y-6"
+              className="space-y-4 md:space-y-6 mt-6"
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className="mb-2">
@@ -113,7 +92,7 @@ export default function Login() {
                   radius={"sm"}
                   type="email"
                   label="Email"
-                  placeholder="Enter your email"
+                  placeholder="Masukkan Email Anda"
                   labelPlacement={"outside"}
                   isInvalid={errors.email ? true : false}
                   errorMessage={errors.email?.message}
@@ -126,7 +105,7 @@ export default function Login() {
                   key={"outside"}
                   radius={"sm"}
                   label="Password"
-                  placeholder="Enter your password"
+                  placeholder="Masukkan Password Anda"
                   labelPlacement={"outside"}
                   isInvalid={errors.password ? true : false}
                   errorMessage={errors.password?.message}
@@ -159,7 +138,7 @@ export default function Login() {
                   </div>
                   <div className="ml-3 text-sm">
                     <label className="text-gray-500 dark:text-gray-300">
-                      Remember me
+                      Ingat Saya
                     </label>
                   </div>
                 </div>
@@ -167,7 +146,7 @@ export default function Login() {
                   href="#"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  Forgot password?
+                  Lupa password?
                 </a>
               </div>
               <div className=" !mt-3 space-y-3 md:!mt-10">
@@ -180,14 +159,14 @@ export default function Login() {
                 </Button>
                 <Link href={"/"}>
                   <button className="mt-3 w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Back
+                    Kembali
                   </button>
                 </Link>
               </div>
               <p>
-                New User?
+                User Baru?
                 <Link href={"/register"}>
-                  <span className="underline">Register Here</span>
+                  <span className="underline">Daftar Disini</span>
                 </Link>
               </p>
             </form>

@@ -1,10 +1,8 @@
 "use client";
 import axios from "axios";
-import useAuthStore from "@/app/stores/authStore";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import { toast } from "react-toastify";
 import {
   Modal,
@@ -22,6 +20,7 @@ import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Buku from "@/app/component/cardBuku";
+import { useSession } from "next-auth/react";
 type Inputs = {
   cover: FileList;
   judul_buku: string;
@@ -49,7 +48,7 @@ const schema = yup
   .required();
 
 export default function Page() {
-  const { token } = useAuthStore();
+  const { data: session }: { data: any } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
   const page = searchParams.get("page");
@@ -80,7 +79,6 @@ export default function Page() {
         currentPage === 1 ? "manage-buku" : `manage-buku?page=${currentPage}`;
       router.push(targetPage);
     };
-
     redirectToPage();
   }, [currentPage, router]);
 
@@ -105,7 +103,7 @@ export default function Page() {
       formData.append("pdf_buku", data.pdf_buku[0]);
 
       const headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${session?.user.accessToken}`,
         "Content-Type": "multipart/form-data",
       };
 

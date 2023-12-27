@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import useAuthStore from "@/app/stores/authStore";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import {
@@ -25,6 +24,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
 import { Eye, EyeOff, Info, MoreVertical, Plus } from "lucide-react";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
 YupPassword(yup);
 type Inputs = {
   name: string;
@@ -33,10 +33,7 @@ type Inputs = {
   role_id: number;
 };
 type InfoUser = {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
+  id: number | null;
   role: string;
 };
 const schema = yup
@@ -53,7 +50,7 @@ const schema = yup
   })
   .required();
 export default function Page() {
-  const { token } = useAuthStore();
+  const { data: session, status }: { data: any; status: string } = useSession();
   const [user, setUser] = useState([]);
   const [role, setRole] = useState([]);
   const [infoUser, setInfoUser] = useState<InfoUser>();
@@ -64,7 +61,8 @@ export default function Page() {
     register,
     handleSubmit,
     reset,
-
+    setValue,
+    getValues,
     control,
     formState: { errors },
   } = useForm<Inputs>({
@@ -86,11 +84,11 @@ export default function Page() {
               onClick={() => {
                 setInfoUser({
                   id: row.id,
-                  name: row.name,
-                  email: row.email,
-                  password: row.password,
                   role: row.role.role,
                 });
+                setValue("name", row.name);
+                setValue("email", row.email);
+                setValue("role_id", row.role.role_id);
                 setIsEdit(true);
                 onOpen();
               }}
@@ -155,7 +153,7 @@ export default function Page() {
     try {
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${session?.user.accessToken}`,
       };
       const jsonData = JSON.stringify(data);
       if (!isEdit) {
@@ -204,7 +202,7 @@ export default function Page() {
   };
   const getUser = async () => {
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${session?.user.accessToken}`,
     };
     const res = await axios.get(`http://127.0.0.1:8000/api/user`, {
       headers,
@@ -217,7 +215,7 @@ export default function Page() {
     try {
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${session?.user.accessToken}`,
       };
 
       await axios.delete(`http://127.0.0.1:8000/api/user/${idUser}`, {
@@ -245,7 +243,7 @@ export default function Page() {
   };
   const getRole = async () => {
     const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${session?.user.accessToken}`,
     };
     const res = await axios.get(`http://127.0.0.1:8000/api/role`, {
       headers,
@@ -255,11 +253,11 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if (token != null) {
+    if (status == "authenticated") {
       getUser();
       getRole();
     }
-  }, []);
+  }, [session?.user.accessToken]);
 
   return (
     <div className="w-full">
@@ -302,7 +300,7 @@ export default function Page() {
                         isInvalid={errors.name ? true : false}
                         errorMessage={errors.name?.message}
                         className="mb-10"
-                        defaultValue={isEdit ? infoUser?.name : ""}
+                        defaultValue={isEdit ? getValues("name") : ""}
                         {...register("name")}
                       />
                     </div>
@@ -318,7 +316,7 @@ export default function Page() {
                         isInvalid={errors.email ? true : false}
                         errorMessage={errors.email?.message}
                         className="mb-10 "
-                        defaultValue={isEdit ? infoUser?.email : ""}
+                        defaultValue={isEdit ? getValues("email") : ""}
                         {...register("email")}
                       />
                     </div>
@@ -332,7 +330,6 @@ export default function Page() {
                           labelPlacement={"outside"}
                           isInvalid={errors.password ? true : false}
                           errorMessage={errors.password?.message}
-                          defaultValue={isEdit ? infoUser?.password : ""}
                           {...register("password")}
                         />
                       </div>
@@ -344,7 +341,7 @@ export default function Page() {
                       <Controller
                         control={control}
                         name="role_id"
-                        render={({ field: { onChange } }) => (
+                        render={({ field: { onChange, value } }) => (
                           <Autocomplete
                             label="Role"
                             placeholder="Search an Role"
@@ -382,6 +379,10 @@ export default function Page() {
                     onPress={() => {
                       reset();
                       onClose();
+                      setInfoUser({
+                        id: null,
+                        role: "",
+                      });
                     }}
                   >
                     Close

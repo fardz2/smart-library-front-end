@@ -14,7 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import useAuthStore from "../stores/authStore";
+// import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
 import {
   Dropdown,
@@ -26,7 +26,17 @@ import {
   Input,
   Spinner,
 } from "@nextui-org/react";
-import { ChevronDownIcon, Menu, Search } from "lucide-react";
+import {
+  Book,
+  BookCopy,
+  ChevronDownIcon,
+  Home,
+  Menu,
+  Search,
+  User,
+} from "lucide-react";
+import { signIn, signOut, useSession } from "next-auth/react";
+
 // import useinfoUserStore from "../stores/userInfoStore";
 const drawerWidth = 240;
 
@@ -43,120 +53,85 @@ export default function SideNav(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const { data: session, status }: { data: any; status: string } = useSession();
 
-  const { token, setToken, clearToken, setInfoUser, infoUser, resetInfoUser } =
-    useAuthStore();
-  // const { infoUser, setinfoUser, resetinfoUser } = useinfoUserStore();
-  useEffect(() => {
-    // if (localStorage.getItem("token")) {
-    //   setToken(localStorage.getItem("token"));
-    //   getinfoUser();
-    // }
-    getinfoUser();
-  }, [token]);
-
-  const getinfoUser = async () => {
-    try {
-      if (token != null) {
-        setLoading(true);
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-        const response = await axios.get("http://127.0.0.1:8000/api/info", {
-          headers,
-        });
-        if (response.status == 200) {
-          setInfoUser({
-            name: response.data.data.name,
-            email: response.data.data.email,
-            role: response.data.data.role_id,
-          });
-        }
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-      const response = await axios.get("http://127.0.0.1:8000/api/logout", {
-        headers,
-      });
-      if (response.status == 200) {
-        localStorage.removeItem("token");
-        resetInfoUser();
-        clearToken();
-        toast.success("Logout success", {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        router.replace("/");
-      }
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   const drawer = (
     <div>
       <Toolbar />
-      <Divider />
+
       <List>
         <Link href={"/"}>
           <ListItem disablePadding>
             <ListItemButton>
-              <ListItemText primary={"Home"} />
+              <div className="flex justify-center items-center gap-3">
+                <Home strokeWidth={1.25} />
+                <ListItemText primary={"Home"} />
+              </div>
             </ListItemButton>
           </ListItem>
         </Link>
         <Link href={"/search"}>
           <ListItem disablePadding>
             <ListItemButton>
-              <ListItemText primary={"Search"} />
+              <div className="flex justify-center items-center gap-3">
+                <Search strokeWidth={1.25} />
+                <ListItemText primary={"Search"} />
+              </div>
             </ListItemButton>
           </ListItem>
         </Link>
-        {infoUser?.role == 1 ? (
+        {session?.user.role == "admin" ? (
           <Link href={"/user"}>
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemText primary={"User"} />
+                <div className="flex justify-center items-center gap-3">
+                  <User strokeWidth={1.25} />
+                  <ListItemText primary={"User"} />
+                </div>
               </ListItemButton>
             </ListItem>
           </Link>
         ) : (
           ""
         )}
-        {infoUser?.role == 1 || infoUser?.role == 2 ? (
-          <Link href={"/manage-buku"}>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary={"Manage buku"} />
-              </ListItemButton>
-            </ListItem>
-          </Link>
+        {session?.user.role == "admin" || session?.user.role == "pustakawan" ? (
+          <>
+            <Link href={"/manage-buku"}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <div className="flex justify-center items-center gap-3">
+                    <Book strokeWidth={1.25} />
+                    <ListItemText primary={"Manage Buku"} />
+                  </div>
+                </ListItemButton>
+              </ListItem>
+            </Link>
+            <Link href={"/peminjaman"}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <div className="flex justify-center items-center gap-3">
+                    <Book strokeWidth={1.25} />
+                    <ListItemText primary={"Pmeinjaman"} />
+                  </div>
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          </>
         ) : (
           ""
         )}
-        {infoUser?.role == 3 ? (
+        {session?.user.role == "pengunjung" ? (
           <Link href={"/my-shelf"}>
             <ListItem disablePadding>
               <ListItemButton>
-                <ListItemText primary={"my shelf"} />
+                <div className="flex justify-center items-center gap-3">
+                  <BookCopy strokeWidth={1.25} />
+                  <ListItemText primary={"my shelf"} />
+                </div>
               </ListItemButton>
             </ListItem>
           </Link>
@@ -186,7 +161,7 @@ export default function SideNav(props: Props) {
         }}
       >
         <Toolbar sx={{ bgcolor: "white" }}>
-          <div className="flex justify-between w-full items-center">
+          <div className="flex justify-end w-full items-center">
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -196,16 +171,9 @@ export default function SideNav(props: Props) {
             >
               <Menu color="#000000" />
             </IconButton>
-            <div className="p-2">
-              <Input
-                type="text"
-                placeholder="Enter your search"
-                startContent={<Search color="#000000" />}
-                className="h-98"
-              />
-            </div>
+
             <div>
-              {token != null ? (
+              {status == "authenticated" ? (
                 <Dropdown>
                   <DropdownTrigger>
                     <Button radius="full" className="pl-1 py-6 bg-white">
@@ -214,7 +182,7 @@ export default function SideNav(props: Props) {
                         color="default"
                         src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
                       />
-                      <p>{infoUser?.name}</p>
+                      <p>{session?.user.name}</p>
                       <ChevronDownIcon />
                     </Button>
                   </DropdownTrigger>
@@ -229,7 +197,22 @@ export default function SideNav(props: Props) {
                       key="delete"
                       className="text-danger"
                       color="danger"
-                      onClick={handleLogout}
+                      onClick={() => {
+                        signOut({
+                          redirect: false,
+                        });
+                        router.replace("/");
+                        toast.success("Logout success", {
+                          position: "bottom-right",
+                          autoClose: 5000,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: "light",
+                        });
+                      }}
                     >
                       Logout
                     </DropdownItem>
@@ -259,6 +242,7 @@ export default function SideNav(props: Props) {
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
+        className="bg-[#54E6FA]"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
@@ -302,6 +286,7 @@ export default function SideNav(props: Props) {
         }}
       >
         <Toolbar />
+
         {props.children}
       </Box>
     </Box>

@@ -1,6 +1,5 @@
 "use client";
-import useAuthStore from "@/app/stores/authStore";
-
+import { useSession } from "next-auth/react";
 import {
   Modal,
   ModalContent,
@@ -28,7 +27,7 @@ const schema = yup
   })
   .required();
 export default function BorrowBuku({ id }: any) {
-  const { token, infoUser } = useAuthStore();
+  const { data: session }: { data: any } = useSession();
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const {
@@ -49,22 +48,41 @@ export default function BorrowBuku({ id }: any) {
     console.log(jsonData);
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${session?.user.accessToken}`,
     };
 
-    await axios.post("http://127.0.0.1:8000/api/peminjaman", jsonData, {
-      headers,
-    });
-    toast.success("Peminjaman berhasil", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    const response = await axios.post(
+      "http://127.0.0.1:8000/api/peminjaman",
+      jsonData,
+      {
+        headers,
+      }
+    );
+
+    console.log(response.data.status);
+    if (response.data.status === 400) {
+      toast.error("Anda tidak bisa meminjam buku lebih dari 3", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      toast.success("Peminjaman berhasil", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
   };
   return (
     <>
@@ -72,9 +90,9 @@ export default function BorrowBuku({ id }: any) {
         onPress={() => {
           onOpen();
         }}
+        className="  text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       >
         {" "}
-        <Plus />
         Borrow
       </Button>
       <Modal

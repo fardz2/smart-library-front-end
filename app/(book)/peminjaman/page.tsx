@@ -38,12 +38,14 @@ export default function Page() {
       let targetPage;
       if (currentPage === 1) {
         targetPage =
-          searchParam != "" ? `/my-shelf?search=${searchParam}` : "/my-shelf";
+          searchParam != ""
+            ? `/peminjaman?search=${searchParam}`
+            : "/peminjaman";
       } else {
         targetPage =
           searchParam != ""
-            ? `/my-shelf?search=${searchParam}&page=${currentPage}`
-            : `/my-shelf?page=${currentPage}`;
+            ? `/peminjaman?search=${searchParam}&page=${currentPage}`
+            : `/peminjaman?page=${currentPage}`;
       }
       router.push(targetPage);
     };
@@ -77,7 +79,7 @@ export default function Page() {
   const onSearch = (e: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const searchValue = formData.get("search") as string;
-    router.push(`/my-shelf?search=${searchValue}`);
+    router.push(`/peminjaman?search=${searchValue}`);
   };
 
   return (
@@ -112,7 +114,7 @@ export default function Page() {
                 denda={item.denda}
                 status={item.status}
                 buku={item.peminjaman_buku}
-                user={null}
+                user={item.user.name}
               />
             ))}
           </div>

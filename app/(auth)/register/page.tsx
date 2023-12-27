@@ -88,15 +88,13 @@ export default function Register() {
   return (
     <section className=" w-full">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen ">
-        <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 h-full">
-          <div className="p-6 s pace-y-4 md:space-y-6 sm:p-8">
+        <div className=" w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 h-auto">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8 ">
             <center>
-              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Welcome Back
-              </h1>
-              <h3>Sign in to continue</h3>
+              <h3 className="text-lg font-bold leading-tight tracking-tight text-gray-900  dark:text-white">
+                Registrasi
+              </h3>
             </center>
-
             <form
               className="space-y-3 md:space-y-3"
               onSubmit={handleSubmit(onSubmit)}
@@ -106,8 +104,8 @@ export default function Register() {
                   key={"outside"}
                   radius={"sm"}
                   type="text"
-                  label="Name"
-                  placeholder="Enter your name"
+                  label="Nama"
+                  placeholder="Masukkan nama anda"
                   labelPlacement={"outside"}
                   isInvalid={errors.name ? true : false}
                   errorMessage={errors.name?.message}
@@ -121,7 +119,7 @@ export default function Register() {
                   radius={"sm"}
                   type="text"
                   label="Email"
-                  placeholder="Enter your email"
+                  placeholder="Masukkan email anda"
                   labelPlacement={"outside"}
                   isInvalid={errors.email ? true : false}
                   errorMessage={errors.email?.message}
@@ -134,7 +132,7 @@ export default function Register() {
                   key={"outside"}
                   radius={"sm"}
                   label="Password"
-                  placeholder="Enter your password"
+                  placeholder="Masukkan password anda"
                   labelPlacement={"outside"}
                   isInvalid={errors.password ? true : false}
                   errorMessage={errors.password?.message}
@@ -160,8 +158,8 @@ export default function Register() {
                 <Input
                   key={"outside"}
                   radius={"sm"}
-                  label="Confirm Password"
-                  placeholder="Enter your Confirm Password"
+                  label="Konfirmasi Password"
+                  placeholder="Ketik ulang password"
                   labelPlacement={"outside"}
                   isInvalid={errors.confirmPassword ? true : false}
                   errorMessage={errors.confirmPassword?.message}
@@ -193,14 +191,14 @@ export default function Register() {
                 </Button>
                 <Link href={"/"}>
                   <button className="mt-3 w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                    Back
+                    Kembali
                   </button>
                 </Link>
               </div>
               <p>
-                Already a user?
+                Sudah mempunyai akun?
                 <Link href={"/login"}>
-                  <span className="underline">Login now</span>
+                  <span className="underline">Masuk sekarang</span>
                 </Link>
               </p>
             </form>
