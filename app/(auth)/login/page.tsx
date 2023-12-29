@@ -163,10 +163,10 @@ export default function Login() {
                   </button>
                 </Link>
               </div>
-              <p>
-                User Baru?
+              <p className="w-full flex flex-row justify-center gap-1 text-sm">
+                Kamu pengguna baru?
                 <Link href={"/register"}>
-                  <span className="underline">Daftar Disini</span>
+                  <span className="underline font-medium text-sky-600">Daftar Disini</span>
                 </Link>
               </p>
             </form>

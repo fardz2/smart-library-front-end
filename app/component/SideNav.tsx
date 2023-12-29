@@ -12,7 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 // import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
@@ -59,25 +59,27 @@ export default function SideNav(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const pathName = usePathname()
+
   const drawer = (
     <div>
       <Toolbar />
 
       <List>
-        <Link href={"/"}>
+        <Link href={"/"} className={`${pathName === "/" ? "bg-blue-300" : ""}`}>
           <ListItem disablePadding>
             <ListItemButton>
-              <div className="flex justify-center items-center gap-3">
+              <div className={`flex justify-center items-center px-4 gap-3 `}>
                 <Home strokeWidth={1.25} />
                 <ListItemText primary={"Home"} />
               </div>
             </ListItemButton>
           </ListItem>
         </Link>
-        <Link href={"/search"}>
+        <Link href={"/search"} className={` ${pathName === "/search" ? "bg-blue-300" : ""}`}>
           <ListItem disablePadding>
             <ListItemButton>
-              <div className="flex justify-center items-center gap-3">
+              <div className="flex justify-center items-center px-4 gap-3">
                 <Search strokeWidth={1.25} />
                 <ListItemText primary={"Search"} />
               </div>
@@ -88,7 +90,7 @@ export default function SideNav(props: Props) {
           <Link href={"/user"}>
             <ListItem disablePadding>
               <ListItemButton>
-                <div className="flex justify-center items-center gap-3">
+                <div className="flex justify-center items-center px-4 gap-3">
                   <User strokeWidth={1.25} />
                   <ListItemText primary={"User"} />
                 </div>
@@ -103,7 +105,7 @@ export default function SideNav(props: Props) {
             <Link href={"/manage-buku"}>
               <ListItem disablePadding>
                 <ListItemButton>
-                  <div className="flex justify-center items-center gap-3">
+                  <div className="flex justify-center items-center px-4 gap-3">
                     <Book strokeWidth={1.25} />
                     <ListItemText primary={"Manage Buku"} />
                   </div>
@@ -113,9 +115,9 @@ export default function SideNav(props: Props) {
             <Link href={"/peminjaman"}>
               <ListItem disablePadding>
                 <ListItemButton>
-                  <div className="flex justify-center items-center gap-3">
+                  <div className="flex justify-center items-center px-4 gap-3">
                     <Book strokeWidth={1.25} />
-                    <ListItemText primary={"Pmeinjaman"} />
+                    <ListItemText primary={"Peminjaman"} />
                   </div>
                 </ListItemButton>
               </ListItem>
@@ -128,9 +130,9 @@ export default function SideNav(props: Props) {
           <Link href={"/my-shelf"}>
             <ListItem disablePadding>
               <ListItemButton>
-                <div className="flex justify-center items-center gap-3">
+                <div className="flex justify-center items-center px-4 gap-3">
                   <BookCopy strokeWidth={1.25} />
-                  <ListItemText primary={"my shelf"} />
+                  <ListItemText primary={"My Shelf"} />
                 </div>
               </ListItemButton>
             </ListItem>
@@ -219,7 +221,7 @@ export default function SideNav(props: Props) {
                   </DropdownMenu>
                 </Dropdown>
               ) : (
-                <div>
+                <div className="flex flex-row gap-3">
                   <Button
                     className="rounded-full bg-[#3DA5B4] text-white"
                     onClick={() => router.push("/login")}
