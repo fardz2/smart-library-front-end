@@ -195,10 +195,10 @@ export default function Register() {
                   </button>
                 </Link>
               </div>
-              <p>
+              <p className="w-full flex flex-row justify-center gap-1 text-sm">
                 Sudah mempunyai akun?
                 <Link href={"/login"}>
-                  <span className="underline">Masuk sekarang</span>
+                  <span className="underline font-medium text-sky-600">Masuk sekarang</span>
                 </Link>
               </p>
             </form>

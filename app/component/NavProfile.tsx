@@ -12,7 +12,7 @@ export default function NavProfile() {
             pathname === "/profile" ? "border-[#FFC196] text-[#F4683C]" : ""
           }`}
         >
-          Account settign
+          Account Settings
         </div>
       </Link>
       <Link href={"/profile/security"}>
