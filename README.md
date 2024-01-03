@@ -1,8 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Cara menjalankan client
 
-## Getting Started
-
-Cara menjalankan client:
+Pastikan servernya telah berjalan [api](https://github.com/fardz2/smart-library-api):
 
 ```bash
 git clone <this repository>
