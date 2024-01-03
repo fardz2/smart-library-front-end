@@ -18,15 +18,18 @@ export default async function Page({ params }: { params: { slug: number } }) {
         </center>
         <div className="flex md:gap-36 gap-5 md:flex-row flex-col justify-center items-center">
           <center>
-            <div className="p-5 w-[250px] h-[300px] bg-white rounded-2xl shadow-xl">
-              <Image
-                src={data.cover}
-                width={0}
-                height={0}
-                sizes="100vw"
-                style={{ width: "100%", height: "auto" }} // optional
-                alt="Picture of the author"
-              />
+            <div className="p-5bg-white w-[220px] h-[350px] rounded-2xl shadow-xl">
+              <div className="bg-red-400 w-[200px] h-80 rounded relative overflow-hidden">
+                <Image
+                  src={data.cover}
+                  objectFit="cover"
+                  objectPosition="center"
+                  layout="fill"
+                  quality={100}
+                  // style={{ width: "auto", height: "auto" }} // optional
+                  alt="Picture of the author"
+                />
+              </div>
             </div>
             <div className="mt-10">
               <ButtonBuku

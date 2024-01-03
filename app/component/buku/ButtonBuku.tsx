@@ -3,6 +3,7 @@
 import BorrowBuku from "./BorrowBuku";
 import EditBuku from "./EditBuku";
 import { useSession } from "next-auth/react";
+import HapusBuku from "./HapusBuku";
 
 interface buku {
   id: string;
@@ -32,21 +33,29 @@ export default function ButtonBuku({
 
   return (
     <>
-      {session?.user.role === "admin" || session?.user.role === "pustakawan" ? (
-        <EditBuku
-          id={id}
-          cover={cover}
-          judul_buku={judul_buku}
-          penerbit={penerbit}
-          pengarang={pengarang}
-          sinopsis={sinopsis}
-          tahun_terbit={tahun_terbit}
-          jumlah_buku={jumlah_buku}
-          lokasi_rak_buku={lokasi_rak_buku}
-          pdf_buku={pdf_buku}
-        />
+      {status == "authenticated" ? (
+        session?.user.role === "admin" ||
+        session?.user.role === "pustakawan" ? (
+          <div className="flex gap-2">
+            <EditBuku
+              id={id}
+              cover={cover}
+              judul_buku={judul_buku}
+              penerbit={penerbit}
+              pengarang={pengarang}
+              sinopsis={sinopsis}
+              tahun_terbit={tahun_terbit}
+              jumlah_buku={jumlah_buku}
+              lokasi_rak_buku={lokasi_rak_buku}
+              pdf_buku={pdf_buku}
+            />
+            <HapusBuku id={id} judul_buku={judul_buku} />
+          </div>
+        ) : (
+          <BorrowBuku id={id} />
+        )
       ) : (
-        <BorrowBuku id={id} />
+        ""
       )}
     </>
   );

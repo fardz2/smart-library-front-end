@@ -130,7 +130,7 @@ export default function EditBuku({
       await axios.post(`http://127.0.0.1:8000/api/buku/${id}`, formData, {
         headers,
       });
-      toast.success("Add Buku Success", {
+      toast.success("Update buku berhasil", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,

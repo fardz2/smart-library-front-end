@@ -71,8 +71,19 @@ export default function BorrowBuku({ id }: any) {
         progress: undefined,
         theme: "light",
       });
+    } else if (response.data.status === "stok buku") {
+      toast.error(response.data.message, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     } else {
-      toast.success("Peminjaman berhasil", {
+      toast.success("Buku berhasil dipinjam", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -83,6 +94,7 @@ export default function BorrowBuku({ id }: any) {
         theme: "light",
       });
     }
+    onClose();
   };
   return (
     <>
@@ -93,7 +105,7 @@ export default function BorrowBuku({ id }: any) {
         className="  text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
       >
         {" "}
-        Borrow
+        Pinjam
       </Button>
       <Modal
         isOpen={isOpen}
@@ -107,7 +119,7 @@ export default function BorrowBuku({ id }: any) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Borrow Buku
+                Pinjam Buku
               </ModalHeader>
               <ModalBody>
                 <form
@@ -119,7 +131,7 @@ export default function BorrowBuku({ id }: any) {
                     name="tipe_buku"
                     render={({ field: { onChange } }) => (
                       <RadioGroup
-                        label="Select your favorite city"
+                        label="Pilih metode peminjaman"
                         isInvalid={errors.tipe_buku ? true : false}
                         errorMessage={errors.tipe_buku?.message}
                         onChange={onChange}
@@ -133,7 +145,7 @@ export default function BorrowBuku({ id }: any) {
                     type="submit"
                     className=" w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                   >
-                    Borrow
+                    Pinjam
                   </Button>
                 </form>
               </ModalBody>

@@ -14,7 +14,7 @@ export default async function Home() {
       <h1 className="text-[35px] font-[600] text-[#4D4D4D]">Hello</h1>
 
       <div>
-        <h3>Recommended for you</h3>
+        <h3>Rekomendasi untuk anda</h3>
 
         <div className="overflow-x-scroll flex flex-nowrap">
           {data.map((e: any) => (

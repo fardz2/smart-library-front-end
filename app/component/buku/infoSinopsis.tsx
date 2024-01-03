@@ -41,7 +41,7 @@ export default function InfoSinopsis({
       </center>
       <div className="bg-[#F27851] flex md:gap-5 p-10 rounded-2xl flex-col md:flex-row shadow-xl w-100">
         {isSinopsis ? (
-          <p>{sinopsis}</p>
+          <p className="text-white">{sinopsis}</p>
         ) : (
           <>
             <div className="grid grid-flow-row md:grid-cols-2 md:gap-4 text-white">

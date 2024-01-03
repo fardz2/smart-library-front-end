@@ -21,15 +21,15 @@ const schema = yup
   .object({
     email: yup
       .string()
-      .email("Email must be a valid email")
-      .required("Email is a required field"),
+      .email("Email harus berupa email yang valid")
+      .required("Email wajib diisi"),
     password: yup
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .minUppercase(1, "Password must contain at least 1 uppercase letter")
-      .minNumbers(1, "Password must contain at least 1 number")
-      .minSymbols(1, "Password must contain at least 1 symbol")
-      .required("Password is a required field"),
+      .min(8, "Password minimal harus 8 karakter")
+      .minUppercase(1, "Password harus mengandung minimal 1 huruf besar")
+      .minNumbers(1, "Password harus berisi minimal 1 angka")
+      .minSymbols(1, "Password harus mengandung minimal 1 simbol")
+      .required("Password harus diisi"),
   })
   .required();
 export default function Login() {
@@ -54,7 +54,7 @@ export default function Login() {
       if (ok) {
         setIsLoadingLogin(false);
         router.replace("/");
-        toast.success("Login success", {
+        toast.success("Login berhasil", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,

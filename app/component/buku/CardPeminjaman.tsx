@@ -67,16 +67,21 @@ export default function CardPeminjaman({
     }
   };
   return (
-    <div className="w-[308px] bg-white p-3 rounded-2xl">
+    <div className="w-[330px] bg-white p-3 rounded-2xl">
       <div className="grid grid-rows-4 grid-flow-col gap-3">
         <div className="row-span-3">
-          <div className=" rounded-md h-[260] w-[160] ">
-            <Image
-              src={cover}
-              width={500}
-              height={500}
-              alt="Picture of the author"
-            />
+          <div className="w-[180px]">
+            <div className="bg-red-400 w-full h-80 rounded relative overflow-hidden">
+              <Image
+                src={cover}
+                objectFit="cover"
+                objectPosition="center"
+                layout="fill"
+                quality={100}
+                // style={{ width: "auto", height: "auto" }} // optional
+                alt="Picture of the author"
+              />
+            </div>
           </div>
         </div>
         <div className="row-span-1 ">
@@ -87,8 +92,9 @@ export default function CardPeminjaman({
           </p>
         </div>
         <div className="row-span-2 ">
-          <p>borrowed on</p>
-          <p>{tanggal_peminjaman}</p>
+          <p>Dipinjam pada</p>
+          <p className="mb-5">{tanggal_peminjaman}</p>
+          <p>Batas waktu pengembalian</p>
           <p>{tanggal_pengembalian}</p>
         </div>
         <div className="row-span-2">

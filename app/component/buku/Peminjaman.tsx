@@ -32,14 +32,13 @@ export default function Peminjaman({
                   ) : (
                     ""
                   )}
-
-                  {status === 0 ? (
-                    <div className="color-red">(belum dikembalikan)</div>
-                  ) : (
-                    <div>Sudah dikembalikan</div>
-                  )}
                 </div>
                 {denda > 0 ? <div>Denda : Rp.{denda}</div> : ""}
+                {status === 0 ? (
+                  <div className="color-red">(belum dikembalikan)</div>
+                ) : (
+                  <div>(Sudah dikembalikan)</div>
+                )}
                 {user != null ? <div>{user}</div> : ""}
               </div>
             </div>

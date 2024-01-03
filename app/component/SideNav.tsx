@@ -12,7 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 // import useAuthStore from "../stores/authStore";
 import { toast } from "react-toastify";
@@ -54,7 +54,7 @@ export default function SideNav(props: Props) {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
   const { data: session, status }: { data: any; status: string } = useSession();
-
+  const pathName = usePathname();
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -66,20 +66,40 @@ export default function SideNav(props: Props) {
       <List>
         <Link href={"/"}>
           <ListItem disablePadding>
-            <ListItemButton>
-              <div className="flex justify-center items-center gap-3">
-                <Home strokeWidth={1.25} />
-                <ListItemText primary={"Home"} />
+            <ListItemButton
+              className={`${pathName === "/" ? "bg-orange" : ""}`}
+            >
+              <div className={`flex justify-center items-center px-4 gap-3 `}>
+                <Home
+                  strokeWidth={1.25}
+                  color={`${pathName === "/" ? "#ffffff" : "#000000"}`}
+                />
+                <ListItemText
+                  primary={"Home"}
+                  className={`${
+                    pathName === "/" ? "text-white" : "text-black"
+                  }`}
+                />
               </div>
             </ListItemButton>
           </ListItem>
         </Link>
         <Link href={"/search"}>
           <ListItem disablePadding>
-            <ListItemButton>
-              <div className="flex justify-center items-center gap-3">
-                <Search strokeWidth={1.25} />
-                <ListItemText primary={"Search"} />
+            <ListItemButton
+              className={`${pathName === "/search" ? "bg-orange" : ""}`}
+            >
+              <div className={`flex justify-center items-center px-4 gap-3 `}>
+                <Search
+                  strokeWidth={1.25}
+                  color={`${pathName === "/search" ? "#ffffff" : "#000000"}`}
+                />
+                <ListItemText
+                  primary={"Search"}
+                  className={`${
+                    pathName === "/search" ? "text-white" : "text-black"
+                  }`}
+                />
               </div>
             </ListItemButton>
           </ListItem>
@@ -87,10 +107,20 @@ export default function SideNav(props: Props) {
         {session?.user.role == "admin" ? (
           <Link href={"/user"}>
             <ListItem disablePadding>
-              <ListItemButton>
-                <div className="flex justify-center items-center gap-3">
-                  <User strokeWidth={1.25} />
-                  <ListItemText primary={"User"} />
+              <ListItemButton
+                className={`${pathName === "/user" ? "bg-orange" : ""}`}
+              >
+                <div className="flex justify-center items-center px-4 gap-3">
+                  <User
+                    strokeWidth={1.25}
+                    color={`${pathName === "/user" ? "#ffffff" : "#000000"}`}
+                  />
+                  <ListItemText
+                    primary={"User"}
+                    className={`${
+                      pathName === "/user" ? "text-white" : "text-black"
+                    }`}
+                  />
                 </div>
               </ListItemButton>
             </ListItem>
@@ -102,20 +132,48 @@ export default function SideNav(props: Props) {
           <>
             <Link href={"/manage-buku"}>
               <ListItem disablePadding>
-                <ListItemButton>
-                  <div className="flex justify-center items-center gap-3">
-                    <Book strokeWidth={1.25} />
-                    <ListItemText primary={"Manage Buku"} />
+                <ListItemButton
+                  className={`${
+                    pathName === "/manage-buku" ? "bg-orange" : ""
+                  }`}
+                >
+                  <div className="flex justify-center items-center px-4 gap-3">
+                    <Book
+                      strokeWidth={1.25}
+                      color={`${
+                        pathName === "/manage-buku" ? "#ffffff" : "#000000"
+                      }`}
+                    />
+                    <ListItemText
+                      primary={"Manage Buku"}
+                      className={`${
+                        pathName === "/manage-buku"
+                          ? "text-white"
+                          : "text-black"
+                      }`}
+                    />
                   </div>
                 </ListItemButton>
               </ListItem>
             </Link>
             <Link href={"/peminjaman"}>
               <ListItem disablePadding>
-                <ListItemButton>
-                  <div className="flex justify-center items-center gap-3">
-                    <Book strokeWidth={1.25} />
-                    <ListItemText primary={"Pmeinjaman"} />
+                <ListItemButton
+                  className={`${pathName === "/peminjaman" ? "bg-orange" : ""}`}
+                >
+                  <div className="flex justify-center items-center px-4 gap-3">
+                    <BookCopy
+                      strokeWidth={1.25}
+                      color={`${
+                        pathName === "/peminjaman" ? "#ffffff" : "#000000"
+                      }`}
+                    />
+                    <ListItemText
+                      primary={"Peminjaman"}
+                      className={`${
+                        pathName === "/peminjaman" ? "text-white" : "text-black"
+                      }`}
+                    />
                   </div>
                 </ListItemButton>
               </ListItem>
@@ -127,10 +185,22 @@ export default function SideNav(props: Props) {
         {session?.user.role == "pengunjung" ? (
           <Link href={"/my-shelf"}>
             <ListItem disablePadding>
-              <ListItemButton>
-                <div className="flex justify-center items-center gap-3">
-                  <BookCopy strokeWidth={1.25} />
-                  <ListItemText primary={"my shelf"} />
+              <ListItemButton
+                className={`${pathName === "/my-shelf" ? "bg-orange" : ""}`}
+              >
+                <div className="flex justify-center items-center px-4 gap-3">
+                  <BookCopy
+                    strokeWidth={1.25}
+                    color={`${
+                      pathName === "/my-shelf" ? "#ffffff" : "#000000"
+                    }`}
+                  />
+                  <ListItemText
+                    primary={"My Shelf"}
+                    className={`${
+                      pathName === "/my-shelf" ? "text-white" : "text-black"
+                    }`}
+                  />
                 </div>
               </ListItemButton>
             </ListItem>
@@ -161,7 +231,7 @@ export default function SideNav(props: Props) {
         }}
       >
         <Toolbar sx={{ bgcolor: "white" }}>
-          <div className="flex justify-end w-full items-center">
+          <div className="flex justify-between md:justify-end w-full items-center">
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -202,7 +272,7 @@ export default function SideNav(props: Props) {
                           redirect: false,
                         });
                         router.replace("/");
-                        toast.success("Logout success", {
+                        toast.success("Logout berhasil", {
                           position: "bottom-right",
                           autoClose: 5000,
                           hideProgressBar: false,

@@ -19,18 +19,22 @@ type Inputs = {
 };
 const schema = yup
   .object({
-    name: yup.string().required("Name is a required field"),
-    email: yup.string().email().required("Email is a required field"),
+    name: yup.string().required("Nama harus diisi"),
+    email: yup
+      .string()
+      .email("Email harus berupa email yang valid")
+      .required("Email harus diisi"),
     password: yup
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .minUppercase(1, "Password must contain at least 1 uppercase letter")
-      .minSymbols(1, "Password must contain at least 1 symbol")
-      .required("Password is a required field"),
+      .min(8, "Password minimal harus 8 karakter")
+      .minUppercase(1, "Password harus mengandung minimal 1 huruf besar")
+      .minNumbers(1, "Password harus berisi minimal 1 angka")
+      .minSymbols(1, "Password harus mengandung minimal 1 simbol")
+      .required("Password harus diisi"),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref("password")], "Confirm Password must match")
-      .required("Confirm Password is a required field"),
+      .oneOf([yup.ref("password")], "Confirm Password harus sesuai")
+      .required("Confirm Password harus diisi"),
   })
   .required();
 export default function Register() {
@@ -64,7 +68,7 @@ export default function Register() {
           headers,
         }
       );
-      toast.success("Register success, Please Login", {
+      toast.success("Register berhasil", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,

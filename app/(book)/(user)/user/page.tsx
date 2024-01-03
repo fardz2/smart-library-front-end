@@ -160,7 +160,7 @@ export default function Page() {
         await axios.post("http://127.0.0.1:8000/api/user", jsonData, {
           headers,
         });
-        toast.success("Add User Success", {
+        toast.success("Tambah user berhasil", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -178,7 +178,7 @@ export default function Page() {
             headers,
           }
         );
-        toast.success("Update User Success", {
+        toast.success("Update user berhasil", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -222,7 +222,7 @@ export default function Page() {
         headers,
       });
 
-      toast.success("Delete User Success", {
+      toast.success("Hapus user berhasil", {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -267,10 +267,11 @@ export default function Page() {
             setIsEdit(false);
             onOpen();
           }}
+          color="success"
         >
           {" "}
           <Plus />
-          Add User
+          Tambah User
         </Button>
         <Modal
           isOpen={isOpen}
@@ -282,7 +283,7 @@ export default function Page() {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  {isEdit ? "Update User" : "Add User"}
+                  {isEdit ? "Update User" : "Tambah User"}
                 </ModalHeader>
                 <ModalBody>
                   <form
@@ -294,8 +295,8 @@ export default function Page() {
                         key={"outside"}
                         radius={"sm"}
                         type="text"
-                        label="Name"
-                        placeholder="Enter your name"
+                        label="Nama"
+                        placeholder="Masukkan nama"
                         labelPlacement={"outside"}
                         isInvalid={errors.name ? true : false}
                         errorMessage={errors.name?.message}
@@ -311,7 +312,7 @@ export default function Page() {
                         radius={"sm"}
                         type="email"
                         label="Email"
-                        placeholder="Enter your email"
+                        placeholder="Masukkan email"
                         labelPlacement={"outside"}
                         isInvalid={errors.email ? true : false}
                         errorMessage={errors.email?.message}
@@ -326,7 +327,7 @@ export default function Page() {
                           key={"outside"}
                           radius={"sm"}
                           label="Password"
-                          placeholder="Enter your password"
+                          placeholder="Masukkan password"
                           labelPlacement={"outside"}
                           isInvalid={errors.password ? true : false}
                           errorMessage={errors.password?.message}
@@ -344,7 +345,7 @@ export default function Page() {
                         render={({ field: { onChange, value } }) => (
                           <Autocomplete
                             label="Role"
-                            placeholder="Search an Role"
+                            placeholder="Masukkan role"
                             className="max-w-full"
                             labelPlacement="outside"
                             defaultItems={role}
@@ -367,7 +368,7 @@ export default function Page() {
                         type="submit"
                         className=" w-full text-white bg-orange hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                       >
-                        {isEdit ? "Update User" : "Add User"}
+                        {isEdit ? "Update User" : "Tambah User"}
                       </Button>
                     </div>
                   </form>
