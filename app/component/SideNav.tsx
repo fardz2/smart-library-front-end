@@ -259,6 +259,7 @@ export default function SideNav(props: Props) {
                   <DropdownMenu aria-label="Static Actions">
                     <DropdownItem
                       key="new"
+                      className="text-black"
                       onClick={() => router.push("/profile/")}
                     >
                       Profile

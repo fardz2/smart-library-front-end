@@ -9,10 +9,12 @@ export default function NavProfile() {
       <Link href={"/profile"}>
         <div
           className={`border-b-2 ${
-            pathname === "/profile" ? "border-[#FFC196] text-[#F4683C]" : ""
+            pathname === "/profile"
+              ? "border-[#FFC196] text-[#F4683C]"
+              : "text-black"
           }`}
         >
-          Account settign
+          Account settings
         </div>
       </Link>
       <Link href={"/profile/security"}>
@@ -20,7 +22,7 @@ export default function NavProfile() {
           className={`border-b-2 ${
             pathname === "/profile/security"
               ? "border-[#FFC196] text-[#F4683C]"
-              : ""
+              : "text-black"
           }`}
         >
           Login & Security

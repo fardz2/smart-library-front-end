@@ -1,6 +1,5 @@
 import ButtonBuku from "@/app/component/buku/ButtonBuku";
 import InfoSinopsis from "@/app/component/buku/infoSinopsis";
-import { Button } from "@nextui-org/react";
 import Image from "next/image";
 
 export default async function Page({ params }: { params: { slug: number } }) {

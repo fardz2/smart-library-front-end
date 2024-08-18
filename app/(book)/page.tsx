@@ -14,9 +14,9 @@ export default async function Home() {
       <h1 className="text-[35px] font-[600] text-[#4D4D4D]">Hello</h1>
 
       <div>
-        <h3>Rekomendasi untuk anda</h3>
+        <h3 className="text-black">Rekomendasi untuk anda</h3>
 
-        <div className="overflow-x-scroll flex flex-nowrap">
+        <div className="overflow-x-scroll flex flex-nowrap gap-4">
           {data.map((e: any) => (
             <Buku
               key={e.id}

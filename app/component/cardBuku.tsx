@@ -11,7 +11,7 @@ export default function Buku({ id, cover, judul, author }: buku) {
   return (
     <Link href={`/book/${id}`}>
       <div
-        className="flex-shrink-0 bg-white mr-10 rounded-lg w-[300px] p-5"
+        className="flex-shrink-0 bg-white rounded-lg w-[300px] p-5 "
         key={id}
       >
         <div className="bg-red-400 w-full h-80 rounded relative overflow-hidden">
@@ -26,8 +26,10 @@ export default function Buku({ id, cover, judul, author }: buku) {
           />
         </div>
         <span className="flex flex-col gap-0.5 mt-3">
-          <h4 className="text-[20px] font-semibold">{judul}</h4>
-          <p className="text-[15px]">{author}</p>
+          <h4 className="text-[20px] font-semibold text-black overflow-hidden text-ellipsis whitespace-nowrap">
+            {judul}
+          </h4>
+          <p className="text-[15px] text-black">{author}</p>
           <p className="text-[12px] text-amber-500 font-bold">4.5/5</p>
         </span>
       </div>
